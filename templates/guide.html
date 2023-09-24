@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software Guide</title>
+
+    <style>
+        ::selection {
+            background-color: #8c0005;
+            /* Set your desired background color */
+            color: white;
+            /* Set your desired text color */
+        }
+    </style>
+
+    <style>
+        *{
+            cursor: url('../static/images/redmouse.png'), auto;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            justify-content: space-between;
+            height: 100px;
+        }
+
+        .heading {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            justify-content: space-between;
+            height: 100px;
+        }
+
+        .heading img {
+            width: 4%;
+            margin-right: 20px;
+
+        }
+
+        .container {
+            background-color: #eadede;
+            width: 100%;
+            height: 80vh;
+            overflow-y: scroll;
+        }
+
+        .sub-container-1 {
+            background-color: #f9f1f1;
+            /* height: 30vh; */
+            width: 150vh;
+            border-radius: 5px;
+            float: left;
+            margin: 1%;
+            text-align: justify;
+            padding: 40px;
+            font-size: larger;
+            line-height: 2;
+            transition: all 0.3s;
+        }
+
+        .sub-container-1:hover {
+            background-color: rgba(20, 4, 4, 0.816);
+            color: #f9f1f1;
+        }
+
+        .sub-container-2 {
+            background-color: #f9f1f1;
+            /* height: 30vh; */
+            width: 150vh;
+            border-radius: 5px;
+            float: right;
+            margin: 1%;
+            text-align: justify;
+            padding: 40px;
+            font-size: larger;
+            line-height: 2;
+            transition: all 0.3s;
+        }
+
+        .sub-container-2:hover {
+            background-color: rgba(20, 4, 4, 0.816);
+            color: #f9f1f1;
+        }
+
+        .container::-webkit-scrollbar {
+            width: 0em;
+            /* Adjust the width as needed */
+        }
+
+        .container::-webkit-scrollbar-track {
+            background-color: transparent;
+            /* Set the background color of the track */
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            background-color: #888;
+            /* Set the color of the scrollbar thumb */
+            border-radius: 4px;
+            /* Add rounded corners to the thumb */
+        }
+
+        .container::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+            /* Set the color of the scrollbar thumb on hover */
+        }
+
+        .innerhead {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 1%;
+            gap: 1rem;
+            width: 15%;
+        }
+
+        .backbtn {
+            width: 50%;
+            border-radius: 50px;
+            cursor: url('../static/images/handmouse.png'), auto;
+        }
+
+        .myh2 {
+            /* border: solid 2px red; */
+            margin-right: 8%;
+        }
+
+        input {
+            margin: 10px;
+            width: 50vh;
+        }
+
+        textarea {
+            margin: 10px;
+            height: 150px;
+            width: 50vh;
+        }
+
+        button {
+            margin: 10px;
+            border: none;
+            border-radius: 10px;
+            background-color: #8c0005;
+            color: white;
+            height: 30px;
+            width: 90px;
+            cursor: url('../static/images/handmouse.png'), auto;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background-color: white;
+            color: black;
+        }
+
+        .footer {
+            margin-top: 5px;
+            height: 10px;
+            background-color: #8c0005;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="heading">
+            <div class="innerhead">
+                <h2>ONGC</h2>
+                <button class="backbtn" onclick="window.location.href='/';">Back To Home</button>
+            </div>
+            <h2 class="myh2">How To Use It . . .</h2>
+            <img src="../static/images/newlogo.png" alt="logo">
+        </div>
+        <div class="container">
+            <p class="sub-container-1">
+                Welcome to the <strong>software guide</strong> for our <strong>text extraction</strong> web app! This
+                guide aims to help you make the most of our web app's powerful features for extracting text from both
+                images and PDF files. Whether you need
+                to extract text from scanned documents, photographs, or PDFs, our web app provides a convenient and
+                efficient solution. Say goodbye to manual typing and tedious data entry tasks! By leveraging advanced
+                <strong>optical character recognition (OCR)</strong> technology, our web app accurately detects and
+                extracts text from images and PDFs, saving you time and effort.
+            </p>
+            <p class="sub-container-2">
+                To ensure the best results, it is recommended to use clear and high-quality images for the extraction
+                process. Clear images with good resolution and minimal noise will enhance the accuracy of the text
+                extraction. Avoid images that are too blurry, low-resolution, or contain excessive background noise, as
+                these factors may impact the extraction results. We have different modes of text extraction for
+                different types of images. You can choose one and use it for the extraction.
+            </p>
+            <p class="sub-container-1">
+                <strong>Default mode - </strong>general mode for simple text images, gives good results when text is
+                clear.<br>
+                <strong>Vertical mode - </strong>mode for vertical text extraction, gives best results for vertical text
+                among
+                others.<br>
+                <strong>Scanned mode - </strong>best for scanned or doc photograph like images.<br>
+                <strong>Distorted mode - </strong>perfect when your image have text not in line or for simple captcha
+                that has clear
+                background.<br>
+                <strong>Hindi mode - </strong>this is our additional feature to extract hindi language text from images
+                that contains
+                hindi.<br>
+                <strong>All o/p - </strong>use this mode when you want all mode outputs, the extracted text will be in
+                form of output-0
+                to output-4.<br>
+            </p>
+            <p class="sub-container-2">
+                In addition to the text extraction features, our web app also integrates a powerful <strong>snipping
+                    tool</strong> to
+                facilitate the extraction process. With the snipping tool, you can precisely select a specific portion
+                of an image to extract text from, providing even more control and flexibility.
+                When you click the snip button, the snipping tool overlays a selection box on the image, allowing you to
+                define the exact area from which you want to extract text. Simply drag and resize the selection box to
+                encompass the desired portion of the image.
+            </p>
+            <p class="sub-container-1">
+                To ensure optimal results, it is recommended to make the snipping box slightly larger than the desired
+                text area. This helps to capture any surrounding context or additional characters that may improve the
+                accuracy of the extracted text. By including some extra space around the text, you can enhance the
+                performance of the text extraction process.
+                Utilize the snipping tool alongside the text extraction features to precisely extract text from specific
+                regions of an image, enabling you to focus on the areas of interest and obtain the most accurate results
+                for your text extraction needs.
+            </p>
+            <p class="sub-container-2">
+                Our web app also offers seamless text extraction from PDF files, providing you with the ability to
+                extract text from individual pages or the entire document. Whether you need to extract text from a
+                single page or navigate through multiple pages for extraction, our web app offers a convenient solution.
+                To extract text from PDF files, simply upload the PDF document to the web app. You can then choose to
+                extract text from a specific page or opt for extracting text from the entire document. Our web app
+                supports efficient navigation through PDF pages, allowing you to move forward or backward to access the
+                desired pages for extraction.
+            </p>
+            <p class="sub-container-1">
+                Additionally, the snipping tool functionality is also available for PDF files, enabling you to precisely
+                select a portion of the PDF page and extract text from that specific area. By leveraging the snipping
+                tool within the PDF viewer, you can capture and extract text from precise regions of interest within the
+                PDF document.
+                With our comprehensive PDF text extraction capabilities, you can extract text from PDF files with ease,
+                whether it's a single page or the entire document. Combine this functionality with the flexibility of
+                the snipping tool, and you have a powerful toolset to extract text from PDFs with precision and
+                accuracy.
+            </p>
+            <p class="sub-container-2">
+                By leveraging advanced technologies such as optical character recognition (OCR) and the integration of a
+                powerful snipping tool, our web app empowers you to effortlessly extract text from various sources,
+                enhancing productivity and saving you valuable time.
+                We encourage you to take advantage of the different modes of text extraction available in our web app,
+                such as default, vertical, scanned, distorted, Hindi, or the all-inclusive mode. Experiment with the
+                snipping tool to capture precise portions of images or PDF pages for optimal text extraction results.
+            </p>
+            <p class="sub-container-1">
+                Your feedback is highly appreciated as it helps us improve our web app and deliver an even better user
+                experience. Please take a moment to provide your valuable feedback through our feedback form. We value
+                your input and strive to incorporate user suggestions to enhance our software further.
+                Thank you for choosing our text extraction web app. We hope it proves to be a valuable tool in your text
+                extraction endeavors. If you have any further questions or require additional assistance, please don't
+                hesitate to reach out to our support team.
+            </p>
+            <p class="sub-container-2">Happy text extraction!
+                Best regards, 
+                <strong>ONGC</strong> team</p>
+
+        </div>
+        <div class="footer">
+        </div>
+
+</body>
+
+</html>

@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/index.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.min.js"></script>
+    <title>ONGC text extracter</title>
+    <style>
+        ::selection {
+            background-color: #8c0005;
+            /* Set your desired background color */
+            color: white;
+            /* Set your desired text color */
+        }
+    </style>
+    <style>
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            z-index: 9999;
+        }
+
+
+        #main-content {
+            display: none;
+        }
+    </style>
+    <!-- <script>
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                document.getElementById('splash-screen').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+            }, 1000); // 1 second
+        });
+    </script> -->
+</head>
+
+<body>
+    <!-- <div id="splash-screen">
+        <img id="splash-logo" src="../static/images/splash.gif" alt="Company Logo">
+    </div> -->
+
+    <div class="heading">
+        <div class="leftnav">
+            <!-- <h2 class="myh2">ONGC</h2> -->
+            <div class="nav">
+                <ul>
+                    <li>
+                        <a class="active" href="/">Home</a>
+                    </li>
+                    <li>
+                        <a href="/about">About</a>
+                    </li>
+                    <li>
+                        <a href="/contact">Contact</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="centernav">
+            <!-- <h2 class="righth2">Text Extractor</h2> -->
+            <img class="extpng" src="../static/images/vanstat.png" />
+            <img class="extgif" src="../static/images/vanilla.gif" />
+        </div>
+        <div class="rightnav">
+            <img class="rightimg" src="../static/images/newlogo.png" alt="logo"
+                onclick="redirectToLink('https://ongcindia.com/')">
+        </div>
+    </div>
+    <script>
+        function redirectToLink(url) {
+            window.open(url, '_blank');
+        }
+    </script>
+
+
+    <div class="container">
+        <div class="sub-container-1">
+
+        </div>
+        <div class="sub-container">
+
+            <div class="box2" id="bx2">
+                <div id="pdfContainer" class="arrow-button">
+                    <img class="replacerpdf" id="repp" style="object-fit:contain; border:solid 2px #CCC"
+                        src="../static/images/gray.png" />
+                    <div id="snippingOverlayForPdf"></div>
+                    <button class="arrow-button-left" onclick="previousPage()">←</button>
+                    <button class="arrow-button-right" onclick="nextPage()">→</button>
+                </div>
+                <div class="bts-1">
+                    <button class="btn-22" id="snipButtonPdf" onclick="snipbtogglePdf()"
+                        style="background-color: #434343 ;">Snip Page</button>
+                    <button class="btn-2" id="clickOpen2" onclick="clickMe()">Choose Another</button>
+                    <button class="btn-2" onclick="extractText('this_page')">This Page Text</button>
+                    <button class="btn-2" onclick="extractText('all_pages')">Extract All Text</button>
+                </div>
+            </div>
+
+            <div class="box1" id="bx1">
+                <div id="imageContainer">
+                    <img class="replacer" id="repi" style="object-fit:scale-down; border:solid 2px #CCC"
+                        src="../static/images/gray.png" />
+                    <div id="snippingOverlay"></div>
+                </div>
+                <div class="bts-1">
+                    <button class="btn-22" id="snipButton" onclick="snipbtoggle()"
+                        style="background-color: #434343 ;">Snip Image</button>
+                    <button class="btn-2" id="clickOpen2" onclick="clickMe()">Choose Another</button>
+                    <button class="btn-2" onclick="extractText('image')">Extract Text</button>
+                </div>
+            </div>
+
+            <div class="box" id="bx">
+                <h2>select image or pdf</h2>
+                <input type="file" name="dialog" id="dialog" onchange="loadMyFile(event)" accept="image/*, .pdf, .txt">
+                <button class="btn" id="clickOpen" onclick="clickMe()">Upload</button>
+                <img id="temphide" src="../static/images/gray.png" />
+            </div>
+
+            <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+        </div>
+
+
+        <div class="sub-container2">
+            <div class="loader-overlay">
+                <div class="loader"></div>
+            </div>
+            <div class="sub-box">
+                <p contenteditable="true" id="extracted_text" class="para">{{ extracted_text }}</p>
+                <p id="originaltxtpara" style="display: none;"></p>
+                <p id="correctedtxtpara" style="display: none;"></p>
+                <p id="pdftemptxtpara" style="display: none;"></p>
+                <!-- <img id="tempi" /> -->
+                <div class="bts">
+                    <div class="innerbts">
+                        <button class="btn-11">Mode</button>
+                        <div class="options-container">
+                            <p id="op0" class="op" onclick="optioncheck('default')">default</p>
+                            <p id="op1" class="op" onclick="optioncheck('vertical')">vertical</p>
+                            <p id="op2" class="op" onclick="optioncheck('scanned')">scanned</p>
+                            <p id="op3" class="op" onclick="optioncheck('distorted')">distorted</p>
+                            <p id="op4" class="op" onclick="optioncheck('hindi')">hindi</p>
+                            <p id="op5" class="op" onclick="optioncheck('all')">all o/p</p>
+                        </div>
+                        <p id="acktochange" class="ackpara">default</p>
+                    </div>
+                    <button class="btn-1" onclick="copyText()">Copy Text</button>
+                    <button id="downloadButton" class="btn-dwn">Download</button>
+                    <div class="options-container-down">
+                        <p id="op00" class="opp" href="#" download="extracted_text.txt"
+                            onclick="downloadText('paratext')">para text</p>
+                        <p id="op11" class="opp" href="#" download="extracted_text.txt"
+                            onclick="downloadText('orgntext')">original text</p>
+                        <p id="op22" class="opp" href="#" download="extracted_text.txt"
+                            onclick="downloadText('crcttext')">corrected text</p>
+                    </div>
+                    <button id="opar1" class="btn-111" onclick="leftoparclick()">&lt;</button>
+                    <button id="opar2" class="btn-111" onclick="rightoparclick()">&gt;</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-container-1">
+
+        </div>
+    </div>
+
+    <footer>
+        <a href="/guide">Software Guide</a>
+        <p><span>Software from </span>Computer Services, Exploration and Development Directorate Dehradun</p>
+        <a href="/feedback">Feedback</a>
+    </footer>
+
+    <div id="notification" class="notification">
+        <div class="abovenoti">
+            <p>How would you rate it !</p>
+            <button style="width: 15px;" onclick="hidestars()">X</button>
+        </div>
+        <div id="stardiv" class="stardiv">
+            <img class="stars" id="st1" onmouseenter="changestar1()" onmouseleave="restar1()" onclick="hidestars()"
+                src="../static/images/starno.png" />
+            <img class="stars" id="st2" onmouseenter="changestar2()" onmouseleave="restar2()" onclick="hidestars()"
+                src="../static/images/starno.png" />
+            <img class="stars" id="st3" onmouseenter="changestar3()" onmouseleave="restar3()" onclick="hidestars()"
+                src="../static/images/starno.png" />
+            <img class="stars" id="st4" onmouseenter="changestar4()" onmouseleave="restar4()" onclick="hidestars()"
+                src="../static/images/starno.png" />
+            <img class="stars" id="st5" onmouseenter="changestar5()" onmouseleave="restar5()" onclick="hidestars()"
+                src="../static/images/starno.png" />
+        </div>
+    </div>
+
+    <script>
+        var star1 = document.getElementById('st1');
+        var star2 = document.getElementById('st2');
+        var star3 = document.getElementById('st3');
+        var star4 = document.getElementById('st4');
+        var star5 = document.getElementById('st5');
+        const noti = document.getElementById('notification');
+
+        function changestar1() {
+            star1.src = '../static/images/staryes.png';
+        }
+        function restar1() {
+            star1.src = '../static/images/starno.png';
+        }
+        function changestar2() {
+            star1.src = '../static/images/staryes.png';
+            star2.src = '../static/images/staryes.png';
+        }
+        function restar2() {
+            star1.src = '../static/images/starno.png';
+            star2.src = '../static/images/starno.png';
+        }
+        function changestar3() {
+            star1.src = '../static/images/staryes.png';
+            star2.src = '../static/images/staryes.png';
+            star3.src = '../static/images/staryes.png';
+        }
+        function restar3() {
+            star1.src = '../static/images/starno.png';
+            star2.src = '../static/images/starno.png';
+            star3.src = '../static/images/starno.png';
+        }
+        function changestar4() {
+            star1.src = '../static/images/staryes.png';
+            star2.src = '../static/images/staryes.png';
+            star3.src = '../static/images/staryes.png';
+            star4.src = '../static/images/staryes.png';
+        }
+        function restar4() {
+            star1.src = '../static/images/starno.png';
+            star2.src = '../static/images/starno.png';
+            star3.src = '../static/images/starno.png';
+            star4.src = '../static/images/starno.png';
+        }
+        function changestar5() {
+            star1.src = '../static/images/staryes.png';
+            star2.src = '../static/images/staryes.png';
+            star3.src = '../static/images/staryes.png';
+            star4.src = '../static/images/staryes.png';
+            star5.src = '../static/images/staryes.png';
+        }
+        function restar5() {
+            star1.src = '../static/images/starno.png';
+            star2.src = '../static/images/starno.png';
+            star3.src = '../static/images/starno.png';
+            star4.src = '../static/images/starno.png';
+            star5.src = '../static/images/starno.png';
+        }
+
+        function showstars() {
+            noti.style.display = 'block';
+        }
+        function hidestars() {
+            noti.style.display = 'none';
+        }
+
+    </script>
+
+    <!-- java script -->
+    <script>
+
+        function showLoader() {
+            document.querySelector('.loader-overlay').style.display = 'flex';
+        }
+
+        function hideLoader() {
+            document.querySelector('.loader-overlay').style.display = 'none';
+        }
+
+        let fileInputbuff = null;
+
+        var imageContainer = document.getElementById('repi');
+        var pdfContainer = document.getElementById('repp');
+        var snippingOverlay = document.getElementById('snippingOverlay');
+        var snippingOverlayForPdf = document.getElementById('snippingOverlayForPdf');
+        var snipButton = document.getElementById('snipButton');
+        var snipButtonPdf = document.getElementById('snipButtonPdf');
+        var replacer = document.getElementById('repi');
+
+        var isSnipping = false;
+        var isSnippingPdf = false;
+        var startX, startY, endX, endY;
+        var startXPdf, startYPdf, endXPdf, endYPdf;
+        var snipbtogg = false;
+        var snipbtoggPdf = false;
+
+        var tempimghide = document.getElementById('temphide');
+
+        function snipbtoggle() {
+            if (snipbtogg === true) {
+                snipbtogg = false;
+                resetSnippingOverlay();
+                tempimghide.src = "../static/images/gray.png";
+                snipButton.style.backgroundColor = "#434343";
+                imageContainer.classList.add('cursor-arrow');
+                imageContainer.classList.remove('cursor-crosshair');
+            } else {
+                snipbtogg = true;
+                snipButton.style.backgroundColor = "#8c0005";
+                imageContainer.classList.remove('cursor-arrow');
+                imageContainer.classList.add('cursor-crosshair');
+            }
+        }
+        function snipbtogglePdf() {
+            if (snipbtoggPdf === true) {
+                snipbtoggPdf = false;
+                resetSnippingOverlayPdf();
+                tempimghide.src = "../static/images/gray.png";
+                snipButtonPdf.style.backgroundColor = "#434343";
+                pdfContainer.classList.add('cursor-arrow');
+                pdfContainer.classList.remove('cursor-crosshair');
+            } else {
+                snipbtoggPdf = true;
+                snipButtonPdf.style.backgroundColor = "#8c0005";
+                pdfContainer.classList.remove('cursor-arrow');
+                pdfContainer.classList.add('cursor-crosshair');
+            }
+        }
+
+        // THIS DAY --------------------------------
+        document.addEventListener('mousemove', function (event) {
+            if (isSnipping) {
+                var imageRect = imageContainer.getBoundingClientRect();
+                var mouseX = event.clientX - imageRect.left;
+                var mouseY = event.clientY - imageRect.top;
+                endX = Math.max(Math.min(mouseX, imageRect.width), 0);
+                endY = Math.max(Math.min(mouseY, imageRect.height), 0);
+                drawSnippingOverlay();
+            }
+            else if (isSnippingPdf) {
+                var pdfRect = pdfContainer.getBoundingClientRect();
+                var mouseX = event.clientX - pdfRect.left;
+                var mouseY = event.clientY - pdfRect.top;
+                endXPdf = Math.max(Math.min(mouseX, pdfRect.width), 0);
+                endYPdf = Math.max(Math.min(mouseY, pdfRect.height), 0);
+                drawSnippingOverlayPdf();
+            }
+        });
+
+        // THIS DAY -----------------------------------------
+        imageContainer.addEventListener('mousedown', function (event) {
+            if (event.button === 0 && snipbtogg === true) {
+                var imageRect = imageContainer.getBoundingClientRect();
+                startX = event.clientX - imageRect.left;
+                startY = event.clientY - imageRect.top;
+                endX = event.clientX - imageRect.left;
+                endY = event.clientY - imageRect.top;
+                isSnipping = true;
+                // event.preventDefault(); // Prevents selection of underlying text while snipping
+            }
+        });
+
+        pdfContainer.addEventListener('mousedown', function (event) {
+            if (event.button === 0 && snipbtoggPdf === true) {
+                var pdfRect = pdfContainer.getBoundingClientRect();
+                startXPdf = event.clientX - pdfRect.left;
+                startYPdf = event.clientY - pdfRect.top;
+                endXPdf = event.clientX - pdfRect.left;
+                endYPdf = event.clientY - pdfRect.top;
+                isSnippingPdf = true;
+                // event.preventDefault(); // Prevents selection of underlying text while snipping
+            }
+        });
+
+        // THIS DAY -------------------------------------
+        imageContainer.addEventListener('mouseup', function (event) {
+            if (isSnipping && event.button === 0) {
+                isSnipping = false;
+                snipImage();
+                // resetSnippingOverlay();
+            }
+        });
+
+        pdfContainer.addEventListener('mouseup', function (event) {
+            if (isSnippingPdf && event.button === 0) {
+                isSnippingPdf = false;
+                snipPdf();
+                // resetSnippingOverlay();
+            }
+        });
+
+        function drawSnippingOverlay() {
+            snippingOverlay.style.display = 'block';
+
+            var overlayLeft = Math.min(startX, endX);
+            var overlayTop = Math.min(startY, endY);
+            var overlayWidth = Math.abs(startX - endX);
+            var overlayHeight = Math.abs(startY - endY);
+
+            snippingOverlay.style.left = overlayLeft + 'px';
+            snippingOverlay.style.top = overlayTop + 'px';
+            snippingOverlay.style.width = overlayWidth + 'px';
+            snippingOverlay.style.height = overlayHeight + 'px';
+        }
+
+        function drawSnippingOverlayPdf() {
+            snippingOverlayForPdf.style.display = 'block';
+
+            var overlayLeft = Math.min(startXPdf, endXPdf);
+            var overlayTop = Math.min(startYPdf, endYPdf);
+            var overlayWidth = Math.abs(startXPdf - endXPdf);
+            var overlayHeight = Math.abs(startYPdf - endYPdf);
+
+            snippingOverlayForPdf.style.left = overlayLeft + 'px';
+            snippingOverlayForPdf.style.top = overlayTop + 'px';
+            snippingOverlayForPdf.style.width = overlayWidth + 'px';
+            snippingOverlayForPdf.style.height = overlayHeight + 'px';
+        }
+
+
+        function resetSnippingOverlay() {
+            snippingOverlay.style.display = 'none';
+            snippingOverlay.style.left = '0';
+            snippingOverlay.style.top = '0';
+            snippingOverlay.style.width = '0';
+            snippingOverlay.style.height = '0';
+        }
+        function resetSnippingOverlayPdf() {
+            snippingOverlayForPdf.style.display = 'none';
+            snippingOverlayForPdf.style.left = '0';
+            snippingOverlayForPdf.style.top = '0';
+            snippingOverlayForPdf.style.width = '0';
+            snippingOverlayForPdf.style.height = '0';
+        }
+        // THIS DAY -------------------------------------
+        // screenshot method
+        function snipImage() {
+            var img = document.getElementById('repi');
+
+            var width = Math.abs(startX - endX);
+            var height = Math.abs(startY - endY);
+            var x = Math.min(startX, endX);
+            var y = Math.min(startY, endY);
+
+            html2canvas(img, {
+                useCORS: true,
+                width: width,
+                height: height,
+                x: x,
+                y: y,
+                letterRendering: true,
+                dpi: window.devicePixelRatio * 5000 // Adjust the DPI value as needed
+            }).then(function (canvas) {
+                var snippedImage = canvas.toDataURL('image/png');
+
+                // Scale the captured image
+                var scale = 2; // Increase the scale value as needed
+
+                var scaledCanvas = document.createElement('canvas');
+                scaledCanvas.width = width * scale;
+                scaledCanvas.height = height * scale;
+
+                var ctx = scaledCanvas.getContext('2d');
+                ctx.drawImage(canvas, 0, 0, scaledCanvas.width, scaledCanvas.height);
+
+                var snippedImageScaled = scaledCanvas.toDataURL('image/png');
+                // Use the snippedImageScaled as needed
+                // For example:
+                tempimghide.src = snippedImageScaled;
+
+                // using snipped image
+                // const myimgi = document.getElementById('tempi');
+                // myimgi.src = snippedImageScaled;
+                // tempimghide.src = snippedImage;
+            });
+        }
+
+        function snipPdf() {
+            var img = document.getElementById('repp');
+
+            var width = Math.abs(startXPdf - endXPdf);
+            var height = Math.abs(startYPdf - endYPdf);
+            var x = Math.min(startXPdf, endXPdf);
+            var y = Math.min(startYPdf, endYPdf);
+
+            html2canvas(img, {
+                useCORS: true,
+                width: width,
+                height: height,
+                x: x,
+                y: y,
+                letterRendering: true,
+                dpi: window.devicePixelRatio * 5000 // Adjust the DPI value as needed
+            }).then(function (canvas) {
+                var snippedImage = canvas.toDataURL('image/png');
+
+                // Scale the captured image
+                var scale = 2; // Increase the scale value as needed
+
+                var scaledCanvas = document.createElement('canvas');
+                scaledCanvas.width = width * scale;
+                scaledCanvas.height = height * scale;
+
+                var ctx = scaledCanvas.getContext('2d');
+                ctx.drawImage(canvas, 0, 0, scaledCanvas.width, scaledCanvas.height);
+
+                var snippedImageScaled = scaledCanvas.toDataURL('image/png');
+                // Use the snippedImageScaled as needed
+                // For example:
+                tempimghide.src = snippedImageScaled;
+
+                // using snipped image
+                // const myimgi = document.getElementById('tempi');
+                // tempi.src = snippedImageScaled;
+                // tempimghide.src = snippedImage;
+            });
+        }
+
+        // image snipping ends here
+
+        const clickOpen = document.getElementById('clickOpen');
+        const clickOpen2 = document.getElementById('clickOpen2');
+        const dialog = document.getElementById('dialog');
+        const box2 = document.getElementById('bx2');
+        const box1 = document.getElementById('bx1');
+        const box = document.getElementById('bx');
+        const myimgp = document.getElementById('repp');
+        const myimgi = document.getElementById('repi');
+        let pdf;
+
+        function clickMe() {
+            snipbtogg = false; snipbtoggPdf = false;
+            resetSnippingOverlay();
+            resetSnippingOverlayPdf();
+            tempimghide.src = "../static/images/gray.png";
+            snipButton.style.backgroundColor = "#434343"
+            snipButtonPdf.style.backgroundColor = "#434343"
+            imageContainer.classList.add('cursor-arrow');
+            pdfContainer.classList.add('cursor-arrow');
+            imageContainer.classList.remove('cursor-crosshair');
+            pdfContainer.classList.remove('cursor-crosshair');
+            dialog.click();
+        }
+
+        // dialog.addEventListener('change', function () {
+        //     if (dialog.value !== "") {
+        //         box.style.display = 'none';
+        //         box1.style.display = 'block';
+        //     } else {
+        //         // if(box1.style.display==='block') 
+        //         // box.style.display = 'block';
+        //         // box1.style.display = 'none';
+        //     }
+        // });
+
+        var currentPage = 1;
+        var totalPages = 0;
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage(currentPage);
+            }
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage(currentPage);
+            }
+        }
+
+        function renderPage(pageNumber) {
+            pdf.getPage(pageNumber).then(function (page) {
+                const imgcont = document.getElementById('pdfContainer');
+                const viewport = page.getViewport({ scale: 1 });
+
+                const containerWidth = imgcont.offsetWidth - 10;
+                const containerHeight = imgcont.offsetHeight - 10;
+                const aspectRatio = viewport.width / viewport.height;
+
+                let canvasWidth, canvasHeight;
+
+                if (aspectRatio > containerWidth / containerHeight) {
+                    // Image is wider, adjust canvas height
+                    canvasHeight = containerWidth / aspectRatio;
+                    canvasWidth = containerWidth;
+                } else {
+                    // Image is taller or has the same aspect ratio, adjust canvas width
+                    canvasWidth = containerHeight * aspectRatio;
+                    canvasHeight = containerHeight;
+                }
+
+                const canvas = document.createElement("canvas");
+                const context = canvas.getContext("2d");
+                canvas.height = viewport.height; //canvasHeight;
+                canvas.width = viewport.width; //canvasWidth;
+
+                const renderContext = {
+                    canvasContext: context,
+                    viewport: viewport,
+                };
+
+                page.render(renderContext).promise.then(function () {
+                    const framedCanvas = document.createElement("canvas");
+                    const framedContext = framedCanvas.getContext("2d");
+                    framedCanvas.height = containerHeight;
+                    framedCanvas.width = containerWidth;
+                    framedContext.fillStyle = '#f9f1f1';
+                    framedContext.fillRect(0, 0, containerWidth, containerHeight);
+                    framedContext.drawImage(
+                        canvas,
+                        0,
+                        0,
+                        canvas.width,
+                        canvas.height,
+                        (containerWidth - canvasWidth) / 2,
+                        (containerHeight - canvasHeight) / 2,
+                        canvasWidth,
+                        canvasHeight
+                    );
+
+                    const dataUrl = framedCanvas.toDataURL();
+                    myimgp.src = dataUrl;
+                });
+            });
+        }
+
+        function loadMyFile(event) {
+            if (event.target.files && event.target.files[0]) {
+                const file = event.target.files[0];
+                fileInputbuff = file;
+
+                if (file.type === 'application/pdf') {
+
+                    box.style.display = 'none';
+                    box1.style.display = 'none';
+                    box2.style.display = 'block';
+
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const arrayBuffer = e.target.result;
+
+                        // Load the PDF using PDF.js
+                        pdfjsLib.getDocument({ data: arrayBuffer })
+                            .promise
+                            .then(function (pdftorender) {
+                                // Render the pdf page
+                                pdf = pdftorender;
+                                totalPages = pdf.numPages;
+                                currentPage = 1;
+                                renderPage(currentPage);
+                            });
+                    };
+
+                    reader.readAsArrayBuffer(file);
+                } else {
+                    const imgcont = document.getElementById('imageContainer');
+                    box.style.display = 'none';
+                    box2.style.display = 'none';
+                    box1.style.display = 'block';
+
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const img = new Image();
+                        img.onload = function () {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            const containerWidth = imgcont.offsetWidth - 10;
+                            const containerHeight = imgcont.offsetHeight - 10;
+
+                            const aspectRatio = img.width / img.height;
+                            let canvasWidth = containerWidth;
+                            let canvasHeight = containerHeight;
+
+                            if (aspectRatio > containerWidth / containerHeight) {
+                                // Image is wider, adjust canvas height
+                                canvasHeight = containerWidth / aspectRatio;
+                            } else {
+                                // Image is taller or has the same aspect ratio, adjust canvas width
+                                canvasWidth = containerHeight * aspectRatio;
+                            }
+
+                            canvas.width = containerWidth;
+                            canvas.height = containerHeight;
+                            ctx.fillStyle = '#f9f1f1';
+                            ctx.fillRect(0, 0, containerWidth, containerHeight);
+                            ctx.drawImage(
+                                img,
+                                (containerWidth - canvasWidth) / 2,
+                                (containerHeight - canvasHeight) / 2,
+                                canvasWidth,
+                                canvasHeight
+                            );
+
+                            myimgi.src = canvas.toDataURL();
+                        };
+
+                        img.src = e.target.result;
+                    };
+
+                    reader.readAsDataURL(file);
+                    // myimgi.src = URL.createObjectURL(file);
+                }
+            }
+        }
+
+
+        // important work
+
+        var op0 = document.getElementById('op0');
+        var op1 = document.getElementById('op1');
+        var op2 = document.getElementById('op2');
+        var op3 = document.getElementById('op3');
+        var op4 = document.getElementById('op4');
+        var op5 = document.getElementById('op5');
+        var para = document.getElementById('acktochange');
+        var workmode = 'default'
+
+        function optioncheck(name) {
+            switch (name) {
+                case 'default':
+                    op0.style.color = '#8c0005'; op0.style.fontWeight = '600';
+                    op1.style.color = 'black'; op1.style.fontWeight = '400';
+                    op2.style.color = 'black'; op2.style.fontWeight = '400';
+                    op3.style.color = 'black'; op3.style.fontWeight = '400';
+                    op4.style.color = 'black'; op4.style.fontWeight = '400';
+                    op5.style.color = 'black'; op5.style.fontWeight = '400';
+                    para.textContent = 'default';
+                    workmode = 'default';
+                    break;
+                case 'vertical':
+                    op0.style.color = 'black'; op0.style.fontWeight = '400';
+                    op1.style.color = '#8c0005'; op1.style.fontWeight = '600';
+                    op2.style.color = 'black'; op2.style.fontWeight = '400';
+                    op3.style.color = 'black'; op3.style.fontWeight = '400';
+                    op4.style.color = 'black'; op4.style.fontWeight = '400';
+                    op5.style.color = 'black'; op5.style.fontWeight = '400';
+                    para.textContent = 'vertical';
+                    workmode = 'vertical';
+                    break;
+                case 'scanned':
+                    op0.style.color = 'black'; op0.style.fontWeight = '400';
+                    op1.style.color = 'black'; op1.style.fontWeight = '400';
+                    op2.style.color = '#8c0005'; op2.style.fontWeight = '600';
+                    op3.style.color = 'black'; op3.style.fontWeight = '400';
+                    op4.style.color = 'black'; op4.style.fontWeight = '400';
+                    op5.style.color = 'black'; op5.style.fontWeight = '400';
+                    para.textContent = 'scanned';
+                    workmode = 'scanned';
+                    break;
+                case 'distorted':
+                    op0.style.color = 'black'; op0.style.fontWeight = '400';
+                    op1.style.color = 'black'; op1.style.fontWeight = '400';
+                    op2.style.color = 'black'; op2.style.fontWeight = '400';
+                    op3.style.color = '#8c0005'; op3.style.fontWeight = '600';
+                    op4.style.color = 'black'; op4.style.fontWeight = '400';
+                    op5.style.color = 'black'; op5.style.fontWeight = '400';
+                    para.textContent = 'distorted';
+                    workmode = 'distorted';
+                    break;
+                case 'hindi':
+                    op0.style.color = 'black'; op0.style.fontWeight = '400';
+                    op1.style.color = 'black'; op1.style.fontWeight = '400';
+                    op2.style.color = 'black'; op2.style.fontWeight = '400';
+                    op3.style.color = 'black'; op3.style.fontWeight = '400';
+                    op4.style.color = '#8c0005'; op4.style.fontWeight = '600';
+                    op5.style.color = 'black'; op5.style.fontWeight = '400';
+                    para.textContent = 'hindi';
+                    workmode = 'hindi';
+                    break;
+                case 'all':
+                    op0.style.color = 'black'; op0.style.fontWeight = '400';
+                    op1.style.color = 'black'; op1.style.fontWeight = '400';
+                    op2.style.color = 'black'; op2.style.fontWeight = '400';
+                    op3.style.color = 'black'; op3.style.fontWeight = '400';
+                    op4.style.color = 'black'; op4.style.fontWeight = '400';
+                    op5.style.color = '#8c0005'; op5.style.fontWeight = '600';
+                    para.textContent = 'all o/p';
+                    workmode = 'all';
+                    break;
+                default: console.log("no selection");
+            }
+        }
+
+        const extractedTextList = [];
+        const highlightedTextList = [];
+
+        var leftopar = document.getElementById('opar1');
+        var rightopar = document.getElementById('opar2');
+        var oparind = 0;
+
+        const extractedTextElement = document.getElementById('extracted_text');
+        extractedTextElement.addEventListener('input', updateListOnEdit);
+        function updateListOnEdit() {
+            extractedTextList[oparind] = extractedTextElement.textContent;
+            highlightedTextList[oparind] = extractedTextElement.innerHTML;
+        }
+
+        function leftoparclick() {
+            oparind--;
+            if (oparind < 0) oparind = 0;
+            updateParagraph();
+        }
+
+        function rightoparclick() {
+            oparind++;
+            if (oparind >= extractedTextList.length) oparind = extractedTextList.length - 1;
+            updateParagraph();
+        }
+
+        function updateParagraph() {
+            document.getElementById('extracted_text').textContent = extractedTextList[oparind];
+            document.getElementById('extracted_text').classList.add('highlighted');
+            document.getElementById('extracted_text').innerHTML = highlightedTextList[oparind];
+        }
+
+
+        let pdfcase = false;
+
+        function extractText(mode) {
+            oparind = 0;
+            leftopar.style.display = 'none';
+            rightopar.style.display = 'none';
+            // Empty the lists
+            extractedTextList.length = 0;
+            highlightedTextList.length = 0;
+
+            showLoader();
+            console.log('.........text to be extracted.......');
+            const fileInput = document.getElementById('dialog');
+            const pdfpage = document.getElementById('repp');
+            const formData = new FormData();
+
+            if (tempimghide.src !== null && !tempimghide.src.endsWith('images/gray.png')) {  // SNIPPING CASE
+                console.log('.........case one.......');
+                const imageUrl = tempimghide.src;
+                fetch(imageUrl)
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const imageFile = new File([blob], 'snipped_image.png', { type: blob.type });
+                        formData.append('filetopycode', imageFile);
+                        formData.append('workmode', workmode); // TEST
+
+                        fetch('/', {
+                            method: 'POST',
+                            body: formData
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                document.getElementById('extracted_text').textContent = data.extracted_text;
+                                // Update the CSS class of the paragraph to show the highlighted text
+                                document.getElementById('extracted_text').classList.add('highlighted');
+                                document.getElementById('extracted_text').classList.add('highlightedcorrect');
+                                document.getElementById('extracted_text').innerHTML = data.highlighted_text; // Add this line to display the highlighted text
+
+                                document.getElementById('originaltxtpara').textContent = data.extracted_text;
+                                document.getElementById('correctedtxtpara').textContent = data.extracted_text;
+                                document.getElementById('correctedtxtpara').classList.add('highlightedcorrect');
+                                document.getElementById('correctedtxtpara').innerHTML = data.corrected_text;
+
+                                hideLoader();
+                            })
+                            .catch(error => console.error('Error:', error));
+                    })
+                    .catch(error => {
+                        console.error('Error:', error)
+                        hideLoader();
+                    });
+            }
+            else if (mode === 'this_page') {  // PDF SINGLE PAGE CASE
+                console.log('.........case two.......');
+                const imageElement = document.getElementById('repp');
+                const imageUrl = imageElement.src;
+                pdfcase = false;
+
+                fetch(imageUrl)
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const imageFile = new File([blob], 'current_page.png', { type: blob.type });
+                        formData.append('filetopycode', imageFile);
+                        formData.append('workmode', workmode); // TEST
+
+                        fetch('/', {
+                            method: 'POST',
+                            body: formData
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                document.getElementById('extracted_text').textContent = data.extracted_text;
+                                // Update the CSS class of the paragraph to show the highlighted text
+                                document.getElementById('extracted_text').classList.add('highlighted');
+                                document.getElementById('extracted_text').classList.add('highlightedcorrect');
+                                document.getElementById('extracted_text').innerHTML = data.highlighted_text; // Add this line to display the highlighted text
+
+                                document.getElementById('originaltxtpara').textContent = data.extracted_text;
+                                document.getElementById('correctedtxtpara').textContent = data.extracted_text;
+                                document.getElementById('correctedtxtpara').classList.add('highlightedcorrect');
+                                document.getElementById('correctedtxtpara').innerHTML = data.corrected_text;
+
+                                hideLoader();
+                            })
+                            .catch(error => console.error('Error:', error));
+                    })
+                    .catch(error => {
+                        console.error('Error:', error)
+                        hideLoader();
+                    });
+
+            }
+            else if (fileInputbuff != null) {
+                console.log('.........case three.......');
+                formData.append('filetopycode', fileInputbuff);
+                formData.append('workmode', workmode); // TEST
+
+                if (mode === 'all_pages') {  // PDF CASE
+                    leftopar.style.display = 'block';
+                    rightopar.style.display = 'block';
+                    pdfcase = true;
+
+                    fetch('/', {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            const extractedTexts = data.extracted_texts;
+                            const highlightedTexts = data.highlighted_texts;
+
+                            const para = data.para;
+                            const org = data.org;
+                            const crct = data.crct;
+
+                            for (let i = 0; i < extractedTexts.length; i++) {
+                                const extractedText = extractedTexts[i];
+                                const highlightedText = highlightedTexts[i];
+
+                                extractedTextList.push(extractedText);
+                                highlightedTextList.push(highlightedText);
+                            }
+
+                            document.getElementById('extracted_text').textContent = extractedTextList[0];
+                            // Update the CSS class of the paragraph to show the highlighted text
+                            document.getElementById('extracted_text').classList.add('highlighted');
+                            document.getElementById('extracted_text').classList.add('highlightedcorrect');
+                            document.getElementById('extracted_text').innerHTML = highlightedTextList[0]; // Add this line to display the highlighted text
+
+
+                            // 3 TEMPORARY PARAS FOR PDF TEXT
+
+                            document.getElementById('pdftemptxtpara').textContent = org;
+                            document.getElementById('pdftemptxtpara').classList.add('highlighted');
+                            document.getElementById('pdftemptxtpara').classList.add('highlightedcorrect');
+                            document.getElementById('pdftemptxtpara').innerHTML = para;
+
+                            document.getElementById('originaltxtpara').textContent = org;
+
+                            document.getElementById('correctedtxtpara').textContent = org;
+                            document.getElementById('correctedtxtpara').classList.add('highlightedcorrect');
+                            document.getElementById('correctedtxtpara').innerHTML = crct;
+
+                            hideLoader();
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            hideLoader();
+                        });
+
+                }
+                else {  // IMAGE CASE
+                    fetch('/', {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            document.getElementById('extracted_text').textContent = data.extracted_text;
+                            // Update the CSS class of the paragraph to show the highlighted text
+                            document.getElementById('extracted_text').classList.add('highlighted');
+                            document.getElementById('extracted_text').classList.add('highlightedcorrect');
+                            document.getElementById('extracted_text').innerHTML = data.highlighted_text; // Add this line to display the highlighted text
+
+                            document.getElementById('originaltxtpara').textContent = data.extracted_text;
+                            document.getElementById('correctedtxtpara').textContent = data.extracted_text;
+                            document.getElementById('correctedtxtpara').classList.add('highlightedcorrect');
+                            document.getElementById('correctedtxtpara').innerHTML = data.corrected_text;
+
+                            hideLoader();
+                        })
+                        .catch(error => {
+                            console.error('Error:', error)
+                            hideLoader();
+                        });
+                }
+            }
+            else {
+                console.log('.........no case.......');
+                hideLoader();
+            }
+        }
+
+        // function hideLoaderWithDelay() {
+        //     setTimeout(() => {
+        //         hideLoader(); // Hide the loader after a slight delay
+        //     }, 15000); // Adjust the delay time as needed (in milliseconds)
+        // }
+
+
+        function downloadText(mode) {
+            var extractedText = '';
+            if (mode === 'paratext') {
+                if (extractedTextList.length != 0 && pdfcase) {
+                    for (let i = 0; i < highlightedTextList.length; i++) {
+                        // extractedText += extractedTextList[i] + '\n\n'; // Add extracted text with newlines
+                        extractedText += highlightedTextList[i]; // Add highlighted text with newlines
+                    }
+                    const element = document.createElement('a');
+                    element.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(extractedText));
+                    element.setAttribute('download', 'ONGC_extracted_text.html');
+                    element.style.display = 'none';
+                    document.body.appendChild(element);
+                    element.click();
+                    document.body.removeChild(element);
+                    event.preventDefault(); // Prevent default anchor behavior
+                    showstars();
+                    return;
+                } else {
+                    // extractedText = document.getElementById('extracted_text').textContent;
+                    extractedText = document.getElementById('extracted_text').innerHTML;
+                    extractedText = extractedText.replace(/<br>/g, '\n'); // Replace <br> with line breaks
+                    extractedText = extractedText.replace(/<\/?[^>]+(>|$)/g, ''); // Remove HTML tags
+                }
+            }
+            else if (mode === 'crcttext') {
+                extractedText = document.getElementById('correctedtxtpara').innerHTML;
+                extractedText = extractedText.replace(/<br>/g, '\n'); // Replace <br> with line breaks
+                extractedText = extractedText.replace(/<\/?[^>]+(>|$)/g, ''); // Remove HTML tags
+            }
+            else {
+                extractedText = document.getElementById('originaltxtpara').textContent;
+            }
+
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(extractedText));
+            element.setAttribute('download', 'ONGC_extracted_text.txt');
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+            event.preventDefault(); // Prevent default anchor behavior
+            showstars();
+        }
+
+        function copyText() {
+            // Get the text element
+            var textElement = document.getElementById("extracted_text");
+
+            // Create a range object to select the text
+            var range = document.createRange();
+            range.selectNode(textElement);
+
+            // Add the range to the user's selection
+            window.getSelection().addRange(range);
+
+            // Execute the copy command
+            document.execCommand("copy");
+
+            // Clear the selection
+            window.getSelection().removeAllRanges();
+
+            // Optional: Provide visual feedback to the user
+            alert("Text copied!");
+        }
+
+    </script>
+    <!-- java script ends -->
+
+</body>
+
+</html>

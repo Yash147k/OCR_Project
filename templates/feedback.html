@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Form</title>
+
+    <style>
+        ::selection {
+            background-color: #8c0005;
+            /* Set your desired background color */
+            color: white;
+            /* Set your desired text color */
+        }
+    </style>
+
+    <style>
+        *{
+            cursor: url('../static/images/redmouse.png'), auto;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            justify-content: space-between;
+            height: 100px;
+        }
+
+        .heading {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            justify-content: space-between;
+            height: 100px;
+        }
+
+        .heading img {
+            width: 4%;
+            margin-right: 20px;
+
+        }
+
+        .container {
+            background-color: #eadede;
+            height: 80vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .sub-container {
+            background-color: #f9f1f1;
+            height: 70vh;
+            width: 80vh;
+            margin-left: 20px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .innerhead {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 1%;
+            gap: 1rem;
+            width: 15%;
+        }
+
+        .backbtn {
+            width: 50%;
+            border-radius: 50px;
+            cursor: url('../static/images/handmouse.png'), auto;
+        }
+
+        .myh2 {
+            /* border: solid 2px red; */
+            margin-right: 8%;
+        }
+
+        input {
+            margin: 10px;
+            width: 50vh;
+        }
+
+        textarea {
+            margin: 10px;
+            height: 150px;
+            width: 50vh;
+        }
+
+        button {
+            margin: 10px;
+            border: none;
+            border-radius: 10px;
+            background-color: #8c0005;
+            color: white;
+            height: 30px;
+            width: 90px;
+            cursor: url('../static/images/handmouse.png'), auto;
+            transition: all 0.3s;
+        }
+
+        .paracurs {
+            cursor: text;
+        }
+
+        button:hover {
+            background-color: white;
+            color: black;
+        }
+
+        .footer {
+            margin-top: 5px;
+            height: 10px;
+            background-color: #8c0005;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="heading">
+            <div class="innerhead">
+                <h2>ONGC</h2>
+                <button class="backbtn" onclick="window.location.href='/';">Back To Home</button>
+            </div>
+            <h2 class="myh2">Feedback Form</h2>
+            <img src="../static/images/newlogo.png" alt="logo">
+        </div>
+        <div class="container">
+            <div class="sub-container">
+          
+              <form action="" class="sub-container" id="contactForm">
+                <input class="paracurs" id="firstName" type="text" name="firstname" placeholder="First Name" required>
+                <input class="paracurs" id="lastName" type="text" name="lastname" placeholder="Last Name">
+                <input class="paracurs" type="tel" id="phone" name="phone" placeholder="Phone Number" pattern="[0-9]{10}" maxlength="10">
+                <input class="paracurs" type="email" id="email" name="email" placeholder="Email" required>
+                <textarea class="paracurs" id="message" name="message" placeholder="Your Feedback" style="font-family: Arial, Helvetica, sans-serif;" required></textarea>
+                <button type="submit">Submit</button>
+              </form>
+          
+            </div>
+          </div>
+          
+        <div class="footer">
+        </div>
+    </div>
+
+
+    <!-- FIREBASE -->
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-analytics.js";
+        import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyDZ-pa9xJEbT3AXxzlNj0vaFlDh-fqDYb4",
+            authDomain: "mytextextracter.firebaseapp.com",
+            databaseURL: "https://mytextextracter-default-rtdb.firebaseio.com",
+            projectId: "mytextextracter",
+            storageBucket: "mytextextracter.appspot.com",
+            messagingSenderId: "700781285075",
+            appId: "1:700781285075:web:26e84d807b9b529d03ce26",
+            measurementId: "G-6DYRZEG36N"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const database = getDatabase();
+
+        const contactFormDB = ref(database, 'contactForm');
+
+        const myhtmlform = document.getElementById('contactForm');
+
+        myhtmlform.addEventListener('submit', submitForm);
+
+        function submitForm(e) {
+            e.preventDefault();
+            var fname = document.getElementById('firstName').value;
+            var lname = document.getElementById('lastName').value;
+            var phone = document.getElementById('phone').value;
+            var email = document.getElementById('email').value;
+            var message = document.getElementById('message').value;
+            saveMessages(fname, lname, phone, email, message);
+            alert("submitted!");
+        }
+
+        function saveMessages(fname, lname, phone, email, message) {
+            const newContactFormRef = push(contactFormDB);
+            set(newContactFormRef, {
+                fname: fname,
+                lname: lname,
+                email: email,
+                phone: phone,
+                message: message
+            });
+        }
+    </script>
+
+</body>
+
+</html>

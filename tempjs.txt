@@ -1,0 +1,57 @@
+<!-- <script>
+                const clickOpen = document.getElementById('clickOpen');
+                const clickOpen2 = document.getElementById('clickOpen2');
+                const dialog = document.getElementById('dialog');
+                const dialog2 = document.getElementById('dialog2');
+                const box1 = document.getElementById('bx1');
+                const box = document.getElementById('bx');
+                const myimg = document.getElementById('rep');
+
+                function clickMe() {
+                    dialog.click();
+                }
+
+                function clickMe2() {
+                    dialog2.click();
+                }
+
+                dialog.addEventListener('change', function () {
+                    if (dialog.value !== "") {
+                        box.style.display = 'none';
+                        box1.style.display = 'block';
+                    } else {
+                        box.style.display = 'block';
+                        box1.style.display = 'none';
+                    }
+                });
+
+                var loadMyFile = function (event) {
+                    if (event.target.files && event.target.files[0]) {
+                        myimg.src = URL.createObjectURL(event.target.files[0]);
+                        const formData = new FormData();
+                        formData.append('dialog', event.target.files[0]);
+
+                        fetch('/', {
+                            method: 'POST',
+                            body: formData
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                document.getElementById('extracted_text').textContent = data.extracted_text;
+                            })
+                            .catch(error => console.error('Error:', error));
+                    }
+                }
+                function downloadText() {
+                    const extractedText = document.getElementById('extracted_text').textContent;
+                    const element = document.createElement('a');
+                    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(extractedText));
+                    element.setAttribute('download', 'ONGC_extracted_text.txt');
+                    element.style.display = 'none';
+                    document.body.appendChild(element);
+                    element.click();
+                    document.body.removeChild(element);
+                    event.preventDefault(); // Prevent default anchor behavior
+                }
+
+            </script> -->
